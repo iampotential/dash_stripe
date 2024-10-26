@@ -1,0 +1,97 @@
+/* StripeDash.css */
+
+/* Container styling for the StripeDash component */
+.stripe-dash-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Label styling for the title */
+.stripe-dash-label {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Form styling for the payment form */
+.stripe-dash-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Wrapper for the CardElement to make it visually distinct */
+.card-element-wrapper {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* CardElement styling to ensure it looks consistent */
+.card-element {
+    font-size: 16px;
+}
+
+/* Wrapper for the cardholder name input to match the visual style */
+.cardholder-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.input-element {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+}
+
+/* Button styling for the submit button */
+.stripe-dash-button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.stripe-dash-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.stripe-dash-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    .stripe-dash-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .stripe-dash-label {
+        font-size: 1.2em;
+    }
+
+    .stripe-dash-button {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+}

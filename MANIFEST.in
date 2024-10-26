@@ -1,0 +1,11 @@
+include stripe_dash/stripe_dash.min.js
+include stripe_dash/stripe_dash.min.js.map
+include stripe_dash/async-*.js
+include stripe_dash/async-*.js.map
+include stripe_dash/*-shared.js
+include stripe_dash/*-shared.js.map
+include stripe_dash/metadata.json
+include stripe_dash/package-info.json
+include README.md
+include LICENSE
+include package.json
