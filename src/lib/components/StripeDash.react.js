@@ -129,7 +129,8 @@ const CheckoutForm = ({ setProps, referenceId, customConfirmMessage, amount, pre
             <div className="card-element-wrapper">
                 <CardElement options={{ hidePostalCode: true }} className="card-element" />
             </div>
-            <button type="submit" disabled={!stripe || isLoading} className="stripe-dash-button">
+            <button type="submit" disabled={!stripe || isLoading} className={`stripe-dash-button ${isLoading ? 'loading' : ''}`}>
+
                 {isLoading ? <div className="spinner"></div> : `Pay $${amount / 100}`}
             </button>
         </form>
