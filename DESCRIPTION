@@ -1,6 +1,6 @@
 Package: stripeDash
 Title: stripe dash compoenent
-Version: 0.0.1
+Version: 0.0.2
 Description: stripe dash compoenent
 Depends: R (>= 3.0.2)
 Imports: 
