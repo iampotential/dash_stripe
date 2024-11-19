@@ -14,7 +14,8 @@ stripeDash(id=NULL, amount=NULL, customConfirmMessage=NULL,
 errorMessage=NULL, label=NULL, paymentIntentId=NULL,
 paymentMethodDetails=NULL, paymentMethodId=NULL,
 paymentStatus=NULL, prePaymentMessage=NULL,
-referenceId=NULL, stripe_api=NULL, stripe_key=NULL)
+referenceId=NULL, stripe_api=NULL, stripe_key=NULL,
+termsLink=NULL)
 }
 
 \arguments{
@@ -43,6 +44,8 @@ referenceId=NULL, stripe_api=NULL, stripe_key=NULL)
 \item{stripe_api}{Character. }
 
 \item{stripe_key}{Character. }
+
+\item{termsLink}{Character | a list of or a singular dash component, string or number. }
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

@@ -101,6 +101,21 @@
         },
         "required": true,
         "description": ""
+      },
+      "termsLink": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "node"
+            }
+          ]
+        },
+        "required": false,
+        "description": ""
       }
     }
   }

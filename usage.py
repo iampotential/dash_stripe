@@ -1,9 +1,10 @@
 import stripe_dash
 from dash import Dash, callback, html, Input, Output
 import os
+import dash_mantine_components as dmc
 app = Dash(__name__)
 
-app.layout = html.Div([
+app.layout = dmc.MantineProvider([
     stripe_dash.StripeDash(
         id='input',
         label='Confirm Booking',
@@ -16,6 +17,7 @@ app.layout = html.Div([
         prePaymentMessage="Booking for 30 minutes at 12:30 pm on Thursday 10/24",
         stripe_key=os.getenv("STRIPE_KEY"),
         stripe_api=os.getenv("STRIPE_API"),
+        termsLink=html.Div([html.P("By checking you agree to the followasdf as dfasdf asdf asdfasdfasdf asdf asdf asdfasfas fas aing:"),html.Link("wwww.google.com"),html.Link("www.google.com")])
     ),
     html.Div(id='output')
 ])

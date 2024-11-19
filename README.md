@@ -74,7 +74,7 @@ If you have selected install_dependencies during the prompt, you can skip this p
 
 3. Test your tarball by copying it into a new environment and installing it locally:
     ```
-    $ pip install stripe_dash-0.0.1.tar.gz
+    $ pip install stripe_dash-0.0.2.tar.gz
     ```
 
 4. If it works, then you can publish the component to NPM and PyPI:

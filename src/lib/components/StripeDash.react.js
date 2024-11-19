@@ -7,7 +7,7 @@ import './StripeDash.css';
 
 export default class StripeDash extends Component {
     render() {
-        const { id, label, setProps, referenceId, customConfirmMessage, amount, prePaymentMessage, stripe_key, stripe_api } = this.props;
+        const { id, label, setProps, referenceId, customConfirmMessage, amount, prePaymentMessage, stripe_key, stripe_api, termsLink } = this.props;
 
         const stripePromise = loadStripe(stripe_key);
 
@@ -22,6 +22,7 @@ export default class StripeDash extends Component {
                         amount={amount} 
                         prePaymentMessage={prePaymentMessage}
                         stripe_api={stripe_api}  // Pass stripe_api to CheckoutForm
+                        termsLink={termsLink}  // Pass termsLink to CheckoutForm
                     />
                 </Elements>
             </div>
@@ -29,11 +30,12 @@ export default class StripeDash extends Component {
     }
 }
 
-const CheckoutForm = ({ setProps, referenceId, customConfirmMessage, amount, prePaymentMessage, stripe_api }) => {
+const CheckoutForm = ({ setProps, referenceId, customConfirmMessage, amount, prePaymentMessage, stripe_api, termsLink }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [paymentStatus, setPaymentStatus] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
     useEffect(() => {
         if (setProps.paymentStatus) {
@@ -129,8 +131,25 @@ const CheckoutForm = ({ setProps, referenceId, customConfirmMessage, amount, pre
             <div className="card-element-wrapper">
                 <CardElement options={{ hidePostalCode: true }} className="card-element" />
             </div>
-            <button type="submit" disabled={!stripe || isLoading} className={`stripe-dash-button ${isLoading ? 'loading' : ''}`}>
-
+            {termsLink && (
+                <div className="terms-checkbox-wrapper" style={{ display: 'flex', alignItems: 'center' }}>
+                    <input
+                        type="checkbox"
+                        id="termsCheckbox"
+                        checked={isCheckboxChecked}
+                        onChange={() => setIsCheckboxChecked(!isCheckboxChecked)}
+                        style={{ marginRight: '8px' }}
+                    />
+                    <label htmlFor="termsCheckbox" className="checkbox-label" style={{ margin: 0 }}>
+                        {typeof termsLink === 'string' ? (
+                            <a href={termsLink} target="_blank" rel="noopener noreferrer">terms and conditions</a>
+                        ) : (
+                            termsLink
+                        )}
+                    </label>
+                </div>
+            )}
+            <button type="submit" disabled={!stripe || isLoading || (termsLink && !isCheckboxChecked)} className={`stripe-dash-button ${isLoading ? 'loading' : ''}`}>
                 {isLoading ? <div className="spinner"></div> : `Pay $${amount / 100}`}
             </button>
         </form>
@@ -151,5 +170,9 @@ StripeDash.propTypes = {
     amount: PropTypes.number,
     prePaymentMessage: PropTypes.string,
     stripe_key: PropTypes.string.isRequired,  // Stripe key as a prop
-    stripe_api: PropTypes.string.isRequired   // New PropType for the Stripe API endpoint
+    stripe_api: PropTypes.string.isRequired,  // New PropType for the Stripe API endpoint
+    termsLink: PropTypes.oneOfType([           // Updated PropType for the Terms and Conditions link (optional)
+        PropTypes.string,
+        PropTypes.node
+    ])
 };

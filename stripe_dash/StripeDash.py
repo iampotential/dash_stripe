@@ -33,16 +33,18 @@ Keyword arguments:
 
 - stripe_api (string; required)
 
-- stripe_key (string; required)"""
-    _children_props = []
-    _base_nodes = ['children']
+- stripe_key (string; required)
+
+- termsLink (string | a list of or a singular dash component, string or number; optional)"""
+    _children_props = ['termsLink']
+    _base_nodes = ['termsLink', 'children']
     _namespace = 'stripe_dash'
     _type = 'StripeDash'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, label=Component.REQUIRED, paymentStatus=Component.UNDEFINED, errorMessage=Component.UNDEFINED, paymentMethodId=Component.UNDEFINED, referenceId=Component.UNDEFINED, paymentMethodDetails=Component.UNDEFINED, paymentIntentId=Component.UNDEFINED, customConfirmMessage=Component.UNDEFINED, amount=Component.UNDEFINED, prePaymentMessage=Component.UNDEFINED, stripe_key=Component.REQUIRED, stripe_api=Component.REQUIRED, **kwargs):
-        self._prop_names = ['id', 'amount', 'customConfirmMessage', 'errorMessage', 'label', 'paymentIntentId', 'paymentMethodDetails', 'paymentMethodId', 'paymentStatus', 'prePaymentMessage', 'referenceId', 'stripe_api', 'stripe_key']
+    def __init__(self, id=Component.UNDEFINED, label=Component.REQUIRED, paymentStatus=Component.UNDEFINED, errorMessage=Component.UNDEFINED, paymentMethodId=Component.UNDEFINED, referenceId=Component.UNDEFINED, paymentMethodDetails=Component.UNDEFINED, paymentIntentId=Component.UNDEFINED, customConfirmMessage=Component.UNDEFINED, amount=Component.UNDEFINED, prePaymentMessage=Component.UNDEFINED, stripe_key=Component.REQUIRED, stripe_api=Component.REQUIRED, termsLink=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'amount', 'customConfirmMessage', 'errorMessage', 'label', 'paymentIntentId', 'paymentMethodDetails', 'paymentMethodId', 'paymentStatus', 'prePaymentMessage', 'referenceId', 'stripe_api', 'stripe_key', 'termsLink']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'amount', 'customConfirmMessage', 'errorMessage', 'label', 'paymentIntentId', 'paymentMethodDetails', 'paymentMethodId', 'paymentStatus', 'prePaymentMessage', 'referenceId', 'stripe_api', 'stripe_key']
+        self.available_properties = ['id', 'amount', 'customConfirmMessage', 'errorMessage', 'label', 'paymentIntentId', 'paymentMethodDetails', 'paymentMethodId', 'paymentStatus', 'prePaymentMessage', 'referenceId', 'stripe_api', 'stripe_key', 'termsLink']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

@@ -1,6 +1,6 @@
 {
   "name": "stripe_dash",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "stripe dash compoenent",
   "main": "build/index.js",
   "scripts": {
