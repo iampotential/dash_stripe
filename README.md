@@ -1,98 +1,129 @@
 # stripe_dash
 
-stripe_dash is a Dash component library.
+`stripe_dash` is a Dash component library that integrates Stripe payment functionality into your Plotly Dash applications.
 
-stripe dash compoenent
+## Installation
 
-Get started with:
-1. Install Dash and its dependencies: https://dash.plotly.com/installation
-2. Run `python usage.py`
-3. Visit http://localhost:8050 in your web browser
+To install the library, run:
+```bash
+pip install stripe-dash
+```
 
-## Contributing
+## Stripe Credentials
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
+You need two keys from Stripe to use this library:
 
-### Install dependencies
+- **Publishable Key**: Used on the frontend.
+- **Secret Key**: Used on the backend. An example backend implementation is provided below.
 
-If you have selected install_dependencies during the prompt, you can skip this part.
+Ensure these keys are securely stored, e.g., using environment variables.
 
-1. Install npm packages
-    ```
-    $ npm install
-    ```
-2. Create a virtual env and activate.
-    ```
-    $ virtualenv venv
-    $ . venv/bin/activate
-    ```
-    _Note: venv\Scripts\activate for windows_
+## Basic Usage
 
-3. Install python packages required to build components.
-    ```
-    $ pip install -r requirements.txt
-    ```
-4. Install the python packages for testing (optional)
-    ```
-    $ pip install -r tests/requirements.txt
-    ```
+Below is an example of using `stripe_dash` in a Dash app:
 
-### Write your component code in `src/lib/components/StripeDash.react.js`.
+```python
+import stripe_dash
+from dash import Dash, callback, html, Input, Output
+import os
+import dash_mantine_components as dmc
 
-- The demo app is in `src/demo` and you will import your example component code into your demo app.
-- Test your code in a Python environment:
-    1. Build your code
-        ```
-        $ npm run build
-        ```
-    2. Run and modify the `usage.py` sample dash app:
-        ```
-        $ python usage.py
-        ```
-- Write tests for your component.
-    - A sample test is available in `tests/test_usage.py`, it will load `usage.py` and you can then automate interactions with selenium.
-    - Run the tests with `$ pytest tests`.
-    - The Dash team uses these types of integration tests extensively. Browse the Dash component code on GitHub for more examples of testing (e.g. https://github.com/plotly/dash-core-components)
-- Add custom styles to your component by putting your custom CSS files into your distribution folder (`stripe_dash`).
-    - Make sure that they are referenced in `MANIFEST.in` so that they get properly included when you're ready to publish your component.
-    - Make sure the stylesheets are added to the `_css_dist` dict in `stripe_dash/__init__.py` so dash will serve them automatically when the component suite is requested.
-- [Review your code](./review_checklist.md)
+app = Dash(__name__)
 
-### Create a production build and publish:
+app.layout = dmc.MantineProvider([
+    stripe_dash.StripeDash(
+        id='input',
+        label='Confirm Booking',
+        paymentMethodId="asdfadfa",
+        paymentStatus="asdfasdfa",
+        paymentIntentId="",  
+        paymentMethodDetails="",
+        amount=5555,  # Amount in cents
+        customConfirmMessage='hello world confirmation',
+        prePaymentMessage="Booking for 30 minutes at 12:30 pm on Thursday 10/24",
+        stripe_key=os.getenv("STRIPE_KEY"),  # Publishable key
+        stripe_api=os.getenv("STRIPE_API"),  # Backend API endpoint for payment intent
+        termsLink=html.Div([
+            html.P("This keyword argument is optional. If provided, it will display a checkbox to acknowledge terms."),
+            html.Link("Terms Link", href="https://example.com/terms")
+        ])
+    ),
+    html.Div(id='output')
+])
 
-1. Build your code:
-    ```
-    $ npm run build
-    ```
-2. Create a Python distribution
-    ```
-    $ python setup.py sdist bdist_wheel
-    ```
-    This will create source and wheel distribution in the generated the `dist/` folder.
-    See [PyPA](https://packaging.python.org/guides/distributing-packages-using-setuptools/#packaging-your-project)
-    for more information.
+if __name__ == "__main__":
+    app.run_server(debug=True)
+```
 
-3. Test your tarball by copying it into a new environment and installing it locally:
-    ```
-    $ pip install stripe_dash-0.0.2.tar.gz
-    ```
+### Backend API
 
-4. If it works, then you can publish the component to NPM and PyPI:
-    1. Publish on PyPI
-        ```
-        $ twine upload dist/*
-        ```
-    2. Cleanup the dist folder (optional)
-        ```
-        $ rm -rf dist
-        ```
-    3. Publish on NPM (Optional if chosen False in `publish_on_npm`)
-        ```
-        $ npm publish
-        ```
-        _Publishing your component to NPM will make the JavaScript bundles available on the unpkg CDN. By default, Dash serves the component library's CSS and JS locally, but if you choose to publish the package to NPM you can set `serve_locally` to `False` and you may see faster load times._
+The `stripe_api` argument specifies the backend API endpoint where the payment intent is created. Below is an example implementation using FastAPI:
 
-5. Share your component with the community! https://community.plotly.com/c/dash
-    1. Publish this repository to GitHub
-    2. Tag your GitHub repository with the plotly-dash tag so that it appears here: https://github.com/topics/plotly-dash
-    3. Create a post in the Dash community forum: https://community.plotly.com/c/dash
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
+import stripe
+from fastapi.middleware.cors import CORSMiddleware
+import os
+
+# Set your Stripe Secret Key
+stripe.api_key = os.getenv('STRIPE_BE_KEY')
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class PaymentRequest(BaseModel):
+    payment_method_id: str
+    amount: int
+    currency: str = "usd"
+    reference_id: str = Field(default=None)
+
+@app.post("/create-payment-intent/")
+async def create_payment_intent(request: PaymentRequest):
+    try:
+        payment_intent = stripe.PaymentIntent.create(
+            amount=request.amount,
+            currency=request.currency,
+            payment_method=request.payment_method_id,
+            confirm=True,
+            metadata={"reference_id": request.reference_id} if request.reference_id else {},
+            automatic_payment_methods={"enabled": True, "allow_redirects": "never"}
+        )
+
+        return {"status": "success", "payment_intent_id": payment_intent.id}
+    except stripe.error.StripeError as e:
+        raise HTTPException(status_code=400, detail=f"Payment failed: {e.user_message}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8001)
+```
+
+### Key Points:
+1. Replace `os.getenv('STRIPE_BE_KEY')` with your Stripe Secret Key.
+2. The backend API should handle creating payment intents and confirming payments.
+
+## Features
+- **Flexible Configuration**: Customize messages and payment details.
+- **Secure Payments**: Offload sensitive operations to the backend.
+- **Integration with Dash Mantine**: Leverage Mantine components for a modern UI.
+
+## Notes
+- Ensure your server is configured to handle HTTPS for secure payment processing.
+- Test the integration in Stripe's test environment before deploying to production.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Contribution
+Contributions are welcome! Please open an issue or submit a pull request to improve the library.
+
