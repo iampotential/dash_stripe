@@ -122,7 +122,7 @@ if __name__ == "__main__":
 - Test the integration in Stripe's test environment before deploying to production.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License.
 
 ## Contribution
 Contributions are welcome! Please open an issue or submit a pull request to improve the library.
